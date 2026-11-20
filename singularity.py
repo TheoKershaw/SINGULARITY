@@ -889,7 +889,7 @@ class App:
         def ask_sage(text):
             try:
                 system_prompt = "You are Sage, you help with questions from the user involving physics and space. You will answer in around 3 sentences or shorts."
-                response = ollama.chat('llama3.2',
+                response = ollama.chat('llama3.2:3b',
                                     messages=[
                                         {'role': 'system', 'content': system_prompt},
                                         {'role': 'user', 'content': text}
