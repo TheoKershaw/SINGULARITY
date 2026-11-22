@@ -4,6 +4,7 @@ import sys
 from collections import deque
 import ollama
 import pygame
+import socket
 
 """
 Made by Theo Kershaw (Kershaw Industries)
@@ -888,18 +889,18 @@ class App:
 
         def ask_sage(text):
             try:
-                system_prompt = "You are Sage, you help with questions from the user involving physics and space. You will answer in around 3 sentences or shorts."
-                response = ollama.chat('llama3.2:3b',
-                                    messages=[
-                                        {'role': 'system', 'content': system_prompt},
-                                        {'role': 'user', 'content': text}
-                                    ])
+                with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                    #s.settimeout(timeout)
+                    s.connect(('13.63.237.55', 1337))
+                    s.sendall(text.encode())
+                    data = s.recv(4096).decode()
 
-                sage["answer"] = response.message.content
+                sage["answer"] = data
             except Exception as e:
                 sage["answer"] = e
 
         def sage_line(i):
+            print(str(sage["answer"])[i * 44:(i + 1) * 44])
             return str(sage["answer"])[i * 44:(i + 1) * 44]
 
         box = TextBox("Ask Sage...", on_submit=ask_sage)
